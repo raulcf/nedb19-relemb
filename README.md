@@ -1,2 +1,2 @@
-# nedb19-relemb
-NEDB19 - Multi-Modal data exploration paper
+Multi-Modal Data Exploration with a Relational Embedding
+=====================================================================

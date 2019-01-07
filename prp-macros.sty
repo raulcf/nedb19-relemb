@@ -1,0 +1,152 @@
+% prp macros - V5
+
+%\usepackage[english]{babel}
+\usepackage[usenames,dvipsnames]{xcolor}
+%\usepackage[latin1]{inputenc}
+%\usepackage{ae,aecompl} % Generate better PS/PDF than fontenc
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{xspace}
+\usepackage{url}
+\usepackage{xcomment}
+\usepackage[normalem]{ulem}
+\usepackage{enumitem}
+\usepackage{amsmath}
+% \usepackage[normalsize, hang]{subfigure}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{setspace}
+%\usepackage{dblfloatfix} % Fix order of double-column floats
+\usepackage{mathptmx}
+\usepackage{listings}
+%\usepackage{courier}
+\usepackage{inconsolata}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{pifont}
+%\usepackage{titlesec}
+\usepackage{balance}
+\usepackage{scalefnt}
+
+\usepackage{soul}
+
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\SOUL@ulunderline}{\dimen@}{\SOUL@dimen}{}{}
+\patchcmd{\SOUL@ulunderline}{\dimen@}{\SOUL@dimen}{}{}
+\patchcmd{\SOUL@ulunderline}{\dimen@}{\SOUL@dimen}{}{}
+\newdimen\SOUL@dimen
+\makeatother
+
+\usepackage{marginnote}
+\usepackage{comment}
+\usepackage{footnote}
+\usepackage[framemethod=tikz]{mdframed}
+
+% \newcommand{\svn}[1]{\svnsub#1}
+% \def\svnsub$#1${#1}
+%
+% \usepackage{fancyhdr}
+% \pagestyle{fancy}
+% \renewcommand{\headrulewidth}{0pt}
+% \fancyhead{}
+% \fancyfoot{}
+% \fancyfoot[R]{\thepage}
+% \fancyfoot[L]{\texttt{\svn{$Id$}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newlength{\gapspace}
+
+\newcommand{\note}[1]{\noindent{\color{red}\textbf{#1}}}
+\newcommand{\notebc}[1]{\note{\color{Green}[\textsc{bc:} #1]}}
+\newcommand{\notemm}[1]{\note{\color{RoyalBlue}[\textsc{mm:} #1]}}
+\newcommand{\notera}[1]{\note{\color{Orange}[\textsc{ra:} #1]}}
+\newcommand{\noteak}[1]{\note{\color{Orange}[\textsc{ak:} #1]}}
+\newcommand{\notepc}[1]{\note{\color{Purple}[\textsc{pc:} #1]}}
+\newcommand{\refprp}[2]{\uline{#1} \note{\color{Green}[\textsc{prp:} #2]}}
+\newcommand{\refek}[2]{\uline{#1} \note{\color{Orange}[\textsc{ek:} #2]}}
+\newcommand{\refmm}[2]{\uline{#1} \note{\color{RoyalBlue}[\textsc{mm:} #2]}}
+\newcommand{\todo}[1]{\textbf{\color{red}[\textsc{todo:} #1]}}
+\newcommand{\gap}[1][0cm]{\setlength{\gapspace}{#1}\vspace{.5\gapspace}\textbf{\color{red}[...]}\vspace{.5\gapspace}\xspace}
+\newcommand{\marnote}[1]{{\marginpar{\bf\color{red}[#1]}}}
+
+\newcommand{\figplaceholder}[3][3.0cm]{\begin{figure}[t]\hrule\vspace{#1}\hrule\caption{#2}\label{#3}\end{figure}}
+
+\soulregister\cite7
+\soulregister\ref7
+\soulregister\pageref7
+\soulregister\eg7
+\soulregister\unit7
+\soulregister\noteprp7
+\soulregister\gap7
+\soulregister\mypar7
+\soulregister\tinyskip7
+\soulregister\code7
+\soulregister\footnote7
+\soulregister\notemm1
+\soulregister\todo1
+
+
+\sethlcolor{Yellow!20}
+
+\newcommand{\update}[3][0em]{\marginnote{#2}[#1]\hl{#3}}
+
+\newcommand{\updateL}[3][0em]{\reversemarginpar\setlength{\marginparwidth}{1.2cm}\marginnote{#2}[#1]\hl{#3}\normalmarginpar}
+
+\newenvironment{updatepar}[1]{\marginnote{#1}[0em]\savenotes\begin{mdframed}[hidealllines=true,backgroundcolor=Yellow!20,leftmargin=0pt,rightmargin=0pt,innerleftmargin=0pt,innerrightmargin=0pt,innertopmargin=3pt,innerbottommargin=0pt]\stepcounter{footnote}\renewcommand{\thempfootnote}{\arabic{footnote}}\indent}{\end{mdframed}\spewnotes}
+
+\newenvironment{updateparL}[1]{\reversemarginpar\setlength{\marginparwidth}{1.2cm}\marginnote{#1}[0em]\savenotes\begin{mdframed}[hidealllines=true,backgroundcolor=Yellow!20,leftmargin=0pt,rightmargin=0pt,innerleftmargin=0pt,innerrightmargin=0pt,innertopmargin=3pt,innerbottommargin=0pt]\normalmarginpar\stepcounter{footnote}\renewcommand{\thempfootnote}{\arabic{footnote}}\indent}{\end{mdframed}\spewnotes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\ie}{i.e.,\ }
+\newcommand{\eg}{e.g.,\ }
+\newcommand{\etal}{et al.~}
+\newcommand{\vs}{vs.\ }
+\newcommand{\cf}{cf.~}
+
+\newcommand{\unit}[1]{\mbox{\hspace{2pt}#1}\xspace}
+
+\newcommand{\F}{\mbox{Fig.\hspace{0.25em}}}
+\newcommand{\A}{\mbox{Alg.\hspace{0.25em}}}
+
+\newcommand{\code}[1]{\texttt{\small{}#1}\xspace}
+
+\newcommand{\tickYes}{\ding{51}}
+\newcommand{\tickNo}{\ding{55}}
+
+\newcommand{\lalign}[1]{\multicolumn{1}{l}{#1}}
+\newcommand{\calign}[1]{\multicolumn{1}{c}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{myitemize}{%
+\begin{itemize}[leftmargin=1em, itemsep=.1em, parsep=.1em, topsep=.1em,
+    partopsep=.1em]}
+{\end{itemize}}
+
+\newenvironment{myenumerate}{%
+\begin{enumerate}[leftmargin=1.50em, itemsep=0em, parsep=0em, topsep=.1em,
+    partopsep=.1em]}
+{\end{enumerate}}
+
+\newenvironment{myenumeratealpha}{%
+\begin{enumerate}[label=(\alph*), leftmargin=1.50em, itemsep=0em, parsep=0em, topsep=.1em,
+    partopsep=.1em]}
+{\end{enumerate}}
+
+\newenvironment{structure}{\color{blue}\begin{myitemize}}{\end{myitemize}}
+\newenvironment{structure*}{\color{blue}\begin{myenumerate}}{\end{myenumerate}}
+\newenvironment{rawtext}{\color{OliveGreen}}{\color{black}}
+
+\newcommand{\tinyskip}{\vspace{3pt}}
+
+\newcommand{\mypar}[1]{\tinyskip\noindent\textbf{#1.}\xspace}
+\newcommand{\myparr}[1]{\tinyskip\noindent\textbf{#1}\xspace}
+
+\InputIfFileExists{locals-style}{}{}
+
+% End

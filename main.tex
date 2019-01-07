@@ -1,0 +1,234 @@
+\documentclass{sig-alternate-05-2015}
+
+\usepackage{graphicx}
+\usepackage{balance}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{paralist}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{subscript}
+\usepackage{enumitem}
+
+\usepackage{stmaryrd}
+\usepackage{etoolbox}
+
+\apptocmd{\thebibliography}{\scriptsize}{}{}
+
+\let\proof\relax
+\let\endproof\relax
+
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[algoruled, linesnumbered, vlined]{algorithm2e}
+\usepackage[utf8]{inputenc}
+
+\usepackage{inconsolata}
+
+\usepackage{prp-macros}
+\usepackage{sparklines}
+
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+\newtheorem*{example*}{Example}
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\lstset{ %
+   belowskip=-2em,
+   backgroundcolor=\color{white},   % choose the background color; you must
+   basicstyle=\scriptsize\ttfamily,        % the size of the fonts that are used for the code
+   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+   breaklines=true,                 % sets automatic line breaking
+   captionpos=b,                    % sets the caption-position to bottom
+   commentstyle=\color{Brown},    % comment style
+   deletekeywords={...},            % if you want to delete keywords from the given language
+   escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+   extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+   frame=,                    % adds a frame around the code
+   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+   keywordstyle=\color{MidnightBlue},       % keyword style
+   language=,                 % the language of the code
+   morekeywords={*,range,var},            % if you want to add more keywords to the set
+   numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
+   numbersep=5pt,                   % how far the line-numbers are from the code
+   numberstyle=\tiny\color{gray}, % the style that is used for the line-numbers
+   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+   showstringspaces=false,          % underline spaces within strings only
+   showtabs=false,                  % show tabs within strings adding particular underscores
+   stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+   stringstyle=\color{RedOrange},     % string literal style
+   tabsize=2,                       % sets default tabsize to 2 spaces
+   title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+   moredelim=[is][\color{blue}\bfseries\underbar]{@}{@},
+}
+
+\lstdefinestyle{myCSharp}{
+   language={[Sharp]C},
+   basicstyle=\scriptsize,
+   belowskip=-2em,
+   backgroundcolor=\color{white},   % choose the background color; you must
+   basicstyle=\scriptsize\ttfamily,        % the size of the fonts that are used for the code
+   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+   breaklines=true,                 % sets automatic line breaking
+   captionpos=b,                    % sets the caption-position to bottom
+   commentstyle=\color{Brown},    % comment style
+   deletekeywords={...},            % if you want to delete keywords from the given language
+   escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+   extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+   frame=,                    % adds a frame around the code
+   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+   keywordstyle=\color{MidnightBlue},       % keyword style
+   morekeywords={var},            % if you want to add more keywords to the set
+   numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
+   numbersep=5pt,                   % how far the line-numbers are from the code
+   numberstyle=\tiny\color{gray}, % the style that is used for the line-numbers
+   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+   showstringspaces=false,          % underline spaces within strings only
+   showtabs=false,                  % show tabs within strings adding particular underscores
+   stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+   stringstyle=\color{RedOrange},     % string literal style
+   tabsize=2,                       % sets default tabsize to 2 spaces
+   title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+   moredelim=[is][\color{blue}\bfseries\underbar]{@}{@},
+}
+
+\lstdefinestyle{mySQL}{
+   language={SQL},
+   basicstyle=\scriptsize,
+   belowskip=-2em,
+   backgroundcolor=\color{white},   % choose the background color; you must
+   basicstyle=\scriptsize\ttfamily,        % the size of the fonts that are used for the code
+   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+   breaklines=true,                 % sets automatic line breaking
+   captionpos=b,                    % sets the caption-position to bottom
+   commentstyle=\color{Brown},    % comment style
+   deletekeywords={...},            % if you want to delete keywords from the given language
+   escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+   extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+   frame=,                    % adds a frame around the code
+   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+   keywordstyle=\color{MidnightBlue},       % keyword style
+   morekeywords={var},            % if you want to add more keywords to the set
+   numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
+   numbersep=5pt,                   % how far the line-numbers are from the code
+   numberstyle=\tiny\color{gray}, % the style that is used for the line-numbers
+   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+   showstringspaces=false,          % underline spaces within strings only
+   showtabs=false,                  % show tabs within strings adding particular underscores
+   stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+   stringstyle=\color{RedOrange},     % string literal style
+   tabsize=2,                       % sets default tabsize to 2 spaces
+   title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+   moredelim=[is][\color{blue}\bfseries\underbar]{@}{@},
+}
+
+
+\graphicspath{{images/}}
+
+\renewcommand{\labelitemi}{$\circ$}
+\renewcommand{\labelitemii}{$-$}
+
+\captionsetup[figure]{singlelinecheck=false, margin=0pt, font={sf,small},
+  labelfont=bf, justification=centering}
+\captionsetup[table]{singlelinecheck=false, margin=0pt, font={sf,small},
+  labelfont=bf, justification=centering}
+\captionsetup[lstlisting]{singlelinecheck=false, margin=0pt, font={sf,small},
+  labelfont=bf, justification=centering}
+
+\setlength{\textfloatsep}{5pt}
+\setlength{\dbltextfloatsep}{5pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\floatsep}{5pt}
+
+
+\renewcommand\AlCapFnt{\small\sffamily}
+
+\def\Snospace~{\S{}}
+\renewcommand*\sectionautorefname{\Snospace}
+\renewcommand*\subsectionautorefname{\Snospace}
+\renewcommand*\subsubsectionautorefname{\Snospace}
+\newcommand{\corollaryautorefname}{Corollary}
+\newcommand{\propositionautorefname}{Prop.}
+\newcommand{\definitionautorefname}{Def.}
+\renewcommand{\subsectionautorefname}{\Snospace}
+\renewcommand{\figureautorefname}{Fig.}
+\renewcommand{\equationautorefname}{Eq.}
+\newcommand{\exampleautorefname}{Example}
+\newcommand{\problemautorefname}{Problem}
+\renewcommand{\algorithmautorefname}{Alg.}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand\mycommfont[1]{\footnotesize\rmfamily\textcolor{black}{#1}}
+\SetCommentSty{mycommfont}
+
+\newcommand{\myparnospace}[1]{\noindent \textbf{#1}}
+
+\newcommand{\sys}{\textsc{Aurum}\xspace}
+\newcommand{\qtsize}{$\varphi$\xspace}
+
+\newcommand{\Sbs}{Stream batch size\xspace}
+\newcommand{\sbs}{stream batch size\xspace}
+
+\newcommand{\notemw}[1]{\textcolor{orange}{{\bf MW: {#1}}}}
+\newcommand{\notealw}[1]{\note{\color{BlueGreen}[\textsc{ALW:} #1]}}
+\newcommand{\srm}[1]{\note{\color{BlueGreen}[\textsc{SAM:} #1]}}
+
+\newcommand{\zia}[1]{\note{\color{red}[\textsc{Zia: #1}]}}
+
+\newcommand{\DE}[1]{\textsf{DE\textsubscript{#1}}\xspace}
+\newcommand{\DP}[1]{\textsf{DP\textsubscript{#1}}\xspace}
+\newcommand{\SRQ}[1]{\textsf{SRQ\textsubscript{#1}}\xspace}
+
+\newcommand{\eat}[1]{}
+
+\renewcommand{\ldots}{\ifmmode\mathinner{\ldotp\kern-0.1em\ldotp\kern-0.1em\ldotp}\else.\kern-0.13em.\kern-0.13em.\fi}
+
+\renewcommand*{\UrlFont}{\ttfamily\smaller\relax}
+
+\makeatletter
+\def\@copyrightspace{\relax}
+\makeatother
+
+\begin{document}
+
+% ****************** TITLE ****************************************
+
+\title{Multi-Modal Data Exploration with a \\ Learned Relational Embedding}
+
+% ****************** AUTHORS **************************************
+
+\numberofauthors{1}
+
+
+\author{
+ \alignauthor
+ Raul Castro Fernandez, Samuel Madden
+}
+
+
+\maketitle
+
+\input{sections/1-introduction}
+
+%\nocite{*}
+\bibliographystyle{abbrv}
+\bibliography{main}
+\balance
+
+\end{document}
