@@ -8,159 +8,159 @@
 \label{introduction}
 
 % setting
-Answering questions using unfamiliar relational databases is hard and
-time-consuming. Daily, analysts spend a lot of time understanding if a database
-contains the answer to the question they try to answer. They do that by engaging
-in \emph{data exploration} sessions, in which they aim to understand the schema,
-contents of the database, and they devise the specific SQL query they must
-submit to obtain their answer \cite{dataexploration}. During such process, they typically have
-only access to: i) a SQL interface; ii) the domain knowledge they possess; and
-iii) some documentation in the form of table descriptions and email exchanges
-with colleagues. Such resources are insuficcient to understand the database
-efficiently and require a big manual and time-consuming effort. As a result,
-exploring databases becomes a productivity killer.
+In modern enterprises, analysts often engage in {\t data exploration}, where,
+given an unfamiliar database, they seek to understand if the database contains
+the answer to the question they want to answer. Exploration involves
+understanding the schema and contents of the database, and then devising a SQL
+query that provides the answer~\cite{dataexploration}.  During exploration,
+analysts typically only have access to: i) a SQL interface; ii)
+the domain knowledge they possess; and iii) some documentation in the form of
+table descriptions and email exchanges with colleagues. Such resources are often
+insuficcient to fully understand the database, requiring hours of manual and
+time-consuming effort to craft the desired SQL query.
 
 % why this is the case today
-Data exploration sessions are so common today that they constitute an entirely
-new database workload. However, while researchers and practitioners have
-learned how to support OLTP and OLAP workloads efficiently, \ie by using row-
-and column-stores respectively, the same is not true for exploration workloads.
-The reason is that data exploration queries are often vague and ill-defined, but
-today's databases are designed to support precisely defined queries \cite{db}. To
-illustrate the point, consider the following example of a data exploration
+Data exploration workloads are quite different from traditional relational
+workloads, because users need to develop an understanding of table contents
+and relationships between tables, which requires a variety of ad-hoc analyses.
+To illustrate the point, consider the following example of a data exploration
 session:
 
-Suppose an analyst trying to justify new legislation for education in the US.
-The analyst gets access to a newly published public database that
-contains information about US federal spending and wants to use it to figure out
-how much money is spent in education per state. When facing the 500+ tables, it
-would be useful to have a classification of the relations based on the kind of
-content they possess so the analyst can quickly tell apart the relevant tables
-from others concerning health, infrastructure, etc. When narrowing down the
-search to a few relations of interest, it would be useful to have access to a
-meaningful summary of the relations, to confirm whether the tables are
-interesting or not. If the analyst is deciding whether a couple of tables are
-related to each other, it would be useful to understand a bit better how the
-rows in each table relate to each other--before making a huge effort in trying
-to combine them. At any point, if the analyst has a specific keyword to use to
-adjust the search, it would be good to understand which tables, columns and rows
-contain related information to the keyword.
+Suppose an analyst wants to justify new legislation for education in the US.
+The analyst is given access to a newly published public database of 500+ tables
+that contains information about US federal spending and wants to determine how
+much money is spent in education per state. When browsing these tables, it would
+be useful to have a classification of each of them based on the kind of content
+they possess and how the tables are related so the analyst can quickly
+distinguish the relevant tables from irrelevant ones concerning health,
+infrastructure, etc. In addition, as the analyst is narrowing down the search to
+a few relations of interest, it would be useful to have access to a meaningful
+summary of the relations, to confirm whether the tables are interesting or not.
+If the analyst is deciding whether a set of tables are related to each other, it
+also would be useful to understand how the rows in each table relate to each
+other, before actually trying to join them. Finally, at any point, the analyst
+may want to use keywords to guide their search, to understand which tables,
+columns and rows contain related information to the keyword.
 
-Unfortunately, supporting the \emph{exploration strategies} of the example above
-would require a lot of engineering effort, and in other cases it is hard to even
-formulate the problem to be solved. We would need to define a similarity metric
-between relations (or use an existing one such as \cite{summarydb}) and then implement it
-to solve the clustering problem. We would also need to implement a different
-technique to draw sample rows from tables to create useful summaries, using
-perhaps one of the techniques from \cite{diversifydb}. To understand whether two tables are
-related to each other, we'd need to spend time and effort figuring out their
-join keys, before even knowing if they are useful at all. Finally, if a
-requirement changes, or the analyst wishes to perform a different exploration
-strategy, more effort must be spent upfront to support
-the new requirement. The fundamental problem is that the implementations of the
-relational model are not designed for exploration workloads, where we need the
-ability to query data for arbitrary relationships more freely. We propose to
-represent relational data in an alternative format that is more appropriate to
-support varied exploratory strategies such as the one in the example.
+Unfortunately, supporting the \emph{exploration strategies} in this example is
+difficult with relational databases, because they do not provide the ability to
+search, summarize, or identify related tables. Specifically, we would need to
+define a similarity metric between relations (or use an existing one such as
+\cite{summarydb}) and then implement the clustering of related tables. We would also
+need some way to sample rows from tables to create useful summaries, using
+perhaps one of the techniques from \cite{diversifydb}. To understand whether two
+tables are related to each other, we'd need to spend time and effort figuring
+out their join keys, before even knowing if they are useful at all. The
+fundamental problem is that the implementations of the relational model are not
+designed for exploration workloads, where we need the ability to query data for
+arbitrary relationships more freely. In this paper, we propose an alternative
+representation of relational data that is more appropriate to these exploration
+workloads.
 
-In particular, we want to represent relational data in a vector space in which
-cells, attributes, rows and tables are all vectors, and whose distance in the
-space determines how related they are to each other. Related may mean they
-appear in the same row, the same table, or that they share relationships across
-tables--whether they join or not. Suppose we have the federal spending database
-of the example above in a vector space with these characteristics. Clustering
-tables means clustering their vectors, summarizing relations means selecting a
-diverse set of rows that are far from each other, and figuring out if two tables
-are related to each other consists of finding pairs of rows that are close to
-each other in the space. This vector space representation is more appropriate
-because many exploration strategies can be expressed as vector operations that
-rely on distances between sets of points in the space.
+In particular, our idea is to represent relational data in a vector space in
+which cells, attributes, rows and tables are all vectors, and where the distance
+between vectors corresponds to how related items are to each other. Here {\it
+related} may mean they appear in the same row, the same table, or that they
+share relationships across tables or with other rows or records--whether they
+join or not. Suppose we have the federal spending database of the example above
+in such a vector space. By clustering tables based on their similarity in the
+vector space, we can identify relations that are similar to each other. We can
+summarize relations by selecting a diverse set of rows whose vectors are far
+from each other. Finally, we can directly measure the similarity of the tables
+by comparing their vectors. Thus, the vector space representation is a good fit
+for exploration workloads, as many exploration tasks can be expressed as vector
+operations based on distances in the space.
 
-In this short paper we: i) overview a research agenda around the challenge of
-building such vector space; ii) we summarize applications of such
-vector space beyond multi-modal database exploration. The main challenge of
-building the relational embedding is to come up with a vector space which
-represents relational data well and serves as a building block to implement
-various exploration strategies easily and efficiently. A principled way of
-building the vector space is to represent relational data in some
-multi-dimensional tensor---which would be very sparse---where dimensions
-correspond to the different attributes and values in the data, and then
-factorize the tensor to obtain a dense embedding that would contain information
-about how the variables are related to each other. This approach is so far only
-theoretical because we do not know how to precisely represent the relational
-data in a tensor form, or how to factorize it in such a way that the embedding
-represents the relationships of the original data. Instead, we propose to learn
-the embedding directly from the data, which we call \emph{relational embedding}.
-For that, we build on top of modern language modelling techniques to build a
-high quality embedding. This process introduces new problems that we explain in
-detail next.
+In this short paper we: i) overview a set of research challenges in building
+such vector space and ii) summarize applications of vector spaces beyond
+multi-modal database exploration. The main challenge of building the relational
+embedding is to come up with a vector space which represents relational data
+well. 
+% and serves as a building block to implement
+% various exploration strategies easily and efficiently. A principled way of
+% building the vector space is to represent relational data in some
+% multi-dimensional tensor---which would be very sparse---where dimensions
+% correspond to the different attributes and values in the data, and then
+% factorize the tensor to obtain a dense embedding that would contain information
+% about how the variables are related to each other. This approach is so far only
+% theoretical because we do not know how to precisely represent the relational
+% data in a tensor form, or how to factorize it in such a way that the embedding
+% represents the relationships of the original data. Instead, 
+We propose a technique to learn the embedding directly from the data, which we
+call a \emph{relational embedding}. Using this embedding, we build on top of
+modern language modelling techniques to build a high quality embedding. This
+process introduces several problems problems that we explain in detail next.
 
-\subsection*{A Research Agenda for Relational Embeddings}
+\subsection*{Relational Embeddings}
 
-Building a relational embedding consists of dictionary encode tokens from the
+Building a relational embedding requires us to encode tokens from the
 relational table into vectors in such a way that the distance between vectors
 representing related tokens is closer than between the vectors of unrelated
-tokens. Creating a relational embedding involves many challenges that we explore
-below:
+tokens. Creating a relational embedding involves several challenges:
 
 \noindent\textbf{Encoding strategy: } A relation represents two types of
-relationships.  The first type of relationship, called here
-\emph{row-relationship}, is between the primary key and each of the other
-attributes of the relation. This relationship indicates that the tokens are
-related according to the specific attribute name. The second type of
-relationship, \emph{column-relationship}, is between the values of a given
-attribute. This relationship indicates that the token are of the same type,
-which is indicated by the attribute. A relational embedding consists of two
-vector dictionaries: one to represent the tokens based on their
-row-relationship, and a second one to represent the tokens based on their
-column-relationship. Each token will have two vector representations. 
+relationships.  The first type, which we call a \emph{row-relationship}, is
+between the primary key and each of the attributes of the relation. This
+relationship indicates that the tokens are related according to the specific
+attribute name. The second type, a \emph{column-relationship}, is between the
+values of a given attribute. This relationship indicates that the tokens are of
+the same type, as indicated by the attribute. A relational embedding thus
+consists of two dictionaries that map a token to its vector
+representation:
+%\srm{what's a vector dictionary?}: 
+one to represent the tokens based on their row-relationships, and a second one
+to represent the tokens based on their column-relationships. Each token will
+thus have two vector representations. 
 
-The vectors are learned directly from the data using a skipgram model
-\cite{skipgram}. The Skipgram model, originally proposed for learning a language
-model, uses the concept of a \emph{context}, which is a window over the text
-used to determine what pairs of words are positive samples (those within the
-window) and which pairs are negative samples (pairs formed by one word in the
-window and one word outside the window). To limit the number of total negative
-samples---necessary to achieve reasonable training times---a negative sampling
-strategy is often used.
+In our approach, vectors are learned directly from the data using a {\it
+Skipgram model} \cite{skipgram}. The Skipgram model, originally proposed for
+learning a language model, uses the concept of a \emph{context}, which is a
+window over the text used to determine what pairs of words are positive samples
+(those within the window) and which pairs are negative samples (pairs formed by
+one word in the window and one word outside the window). To limit the number of
+total negative samples---necessary to achieve reasonable training times---a
+negative sampling strategy is often used that selects only a sample of words out of
+the window.
 
-When learning a relational embedding there are opportunities on deciding how to
-define the context of the skipgram model as well as the sampling strategy used.
-The goal is to obtain better vector representations than those given by a
-baseline skipgram model. One point of the research agenda is exploring
-different strategies for learning the relational embedding.
+When learning a relational embedding we need to decide both the context of the
+Skipgram model as well as the sampling strategy to use. Our goal is to obtain a
+better (more predictive of relationships) vector representation than that given
+by a baseline Skipgram model. 
 
-\noindent\textbf{Space and Performance Overhead: }To learn good quality vectors we must
-use a high capacity model: vectors must be high-dimensional, e.g., 100 dimensions.
-Each token from the relational data is mapped to two 100-dimensional vectors
-(one for row-relationship and one for column-relationship), and this introduces
-storage and performance overhead. For example, the relational embdding of a
-small, 100MB database, takes about 2GB in space. That's 20X more space! A
-research challenge is how to reduce the storage requirements of the embedding. Among
-the strategies we are using are: i) reducing the precision of the vector
-components once they've been learned; ii) reducing the dimensionality of the
-embedding using non-linear techniques \cite{tsne} that maintain as well as possible the
-pairwise distances of the vectors in the original embedding. This second point
-is the most promising: a non-linear reduction to 3 dimensions reduces the
-relational embedding to around 40MB in the example mentioned above, that's a 50X
-reduction in storage, which permits querying the embedding with higher
-performance as well. However, it also introduces a data quality problem which we
-explore in the next paragraph.
+\noindent\textbf{Space and Performance Overhead: }To learn good quality vectors
+we must use a high capacity model: vectors must be high-dimensional to learn
+good quality embeddings.
+%e.g., 100+
+%dimensions \srm{where does 100 come from?}.  
+Each token from the relational data
+is mapped to two high-dimensional vectors (one for row-relationship and one for
+column-relationship), resulting in a significant storage and performance
+overhead. For example, the relational embdding of a small, 100MB database, takes
+about 2GB in space. A key challenge is to reduce the storage requirements of
+this embedding. Among the strategies use are: i) reducing the precision of the
+vector components once they've been learned; ii) reducing the dimensionality of
+the embedding using non-linear techniques \cite{tsne} that maintain as much as
+possible the pairwise distances of the vectors in the original embedding. This
+second point is the most promising: a non-linear reduction to 3 dimensions
+reduces the relational embedding to around 40MB in the example mentioned above
+(a 50X reduction in storage) which permits querying the embedding with higher
+performance as well. However, it also introduces a data quality problem, which
+we explore in the next paragraph.
 
-\noindent\textbf{Cleaning Vector Data: }When dealing with high-dimensional data, one must
-pay attention to the problems associated to the curse of dimensionality. Two
-specific problems are a challenge that makes part of our research agenda: the
-existence of \emph{hubs}, vectors that appear close to most other vectors, and
-therefore do not add useful information, and the phenomenon of \emph{distance
-concentration}, which makes distances between high-dimensional vectors tend to
-the same magnitude. In addition to these two, because the relational embedding
-is learned, it is noisy. A research agenda item is how to define dirty data in
-the context of vector data---for example, hubs---and propose techniques to
-reduce them, of which those of topological and shape analysis seem promising.
-This is necessary because, otherwise, the effect of dirty data makes
-dimensionality reduction techniques very inefficient.
+\noindent\textbf{Cleaning Vector Data: }When dealing with high-dimensional data,
+one must pay attention to the problems associated to the curse of
+dimensionality. Two specific problems are a challenge that makes part of our
+research agenda: the existence of \emph{hubs}, vectors that appear close to most
+other vectors, and therefore do not add useful information, and the phenomenon
+of \emph{distance concentration}, which makes distances between high-dimensional
+vectors tend to the same magnitude. In addition to these two, because the
+relational embedding is learned, it is noisy. Thus, a research challenge is how
+to define dirty data in the context of vector data---for example, hubs---and
+propose techniques to reduce them, of which those of topological and shape
+analysis seem promising.  This is necessary because, otherwise, the effect of
+dirty data makes dimensionality reduction techniques very inefficient.
 
-\noindent\textbf{Performance Primitives/Structures: }Many of the above
+\noindent\textbf{Performance Primitives/Structures:} Many of the above
 requirements demand the computation of pairwise distances between a large number
 of vectors, e.g., to find hubs, to perform non-linear dimensionality reduction,
 etc. This operation can be very time consuming. Speeding up the process calls
@@ -171,7 +171,7 @@ data.
 outlined in this paper as well as few others mentioned below demand querying
 vector data with variants of top-k queries. For the applications to be robust to
 user demands, we must produce rankings that are informative to users. Specific
-design points are the distance metric to use for measuring distance, the size of
+design points are the distance metric to use for measuring distance, and the size of
 the ranking for which the results are likely of high precision. In addition, we
 must implement API calls efficiently for maximum performance.
 
@@ -195,12 +195,25 @@ In addition to the multi-modal data exploration that motivates this short paper,
 we have identified and investigated other applications of relational embeddings
 which we outline below:
 
-\noindent\textbf{Fabric of data: } Relational embeddings can be combined with
-text embeddings to come up with common intermediate representation to operate on
-structured and unstructured data at the same time. We call this abstraction the
-fabric of data; it has the promise of facilitating many data discovery queries
-than span different data formats, vastly improving users' productivity and
-enabling new applications.
+\noindent\textbf{Fabric of data: }The major advantage of the relational
+embedding is that it works as an intermediate representation in which we can
+represent independently created databases as well as unstructured data, from
+PDFs, to emails, to conversations of Slack channels. Having a common
+representation for all these kinds of data without any human effort has several
+potential advantages. First, it facilitates discovering related data among
+heterogeneous sources without spending any upfront effort. Second, it can help
+with understanding how the data can be curated, i.e., filling missing values or
+complement rows with information from a PDF. Last, it can help with integrating
+data from different databases by understanding how concepts in different
+database related to each other. This application, which we call the \emph{fabric
+of data} aims to improve users' productivity and enable new applications.
+%
+%Relational embeddings can be combined with
+%text embeddings to come up with common intermediate representation to operate on
+%structured and unstructured data at the same time. We call this abstraction the
+%fabric of data; it has the promise of facilitating many data discovery queries
+%than span different data formats, vastly improving users' productivity and
+%enabling new applications.
 
 \noindent\textbf{Generative model of relational data: }We can use the relational
 embedding as the training data of a generative model. Creating a generative
@@ -216,10 +229,20 @@ quality issues.
 translations of the embedding with different entities based on the security
 clearances of those individuals. This can be done in such a way that only the
 person with the right translation can query the embedding and obtain results
-that are sensical.  Exploring how to leverage differential privacy in this
+that are sensical. Exploring how to leverage differential privacy in this
 context is another way in which the relational embedding may facilitate secure
 data exchange.
 
+\tinyskip
+
+\noindent\textbf{Talk Outline: }In the talk, I would motivate the applications of the
+relational embedding and fabric of data outlined above. I would explain in
+detail the challenges of working with data in a vector space. Finally, I would
+present the preliminary results we have obtained and, if time permits, I'd demo
+the current prototype we have.
+%\srm{Give a short summary of the planned talk, including saying you will show a
+%demo on some real data and give some comparisons showing that it is much better
+%than a naive embedding approach.}
 
 \subsection*{Conclusion}
 
